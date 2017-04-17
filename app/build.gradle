@@ -17,6 +17,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        def MOVIE_DB_KEY = '"' + MovieDBKey + '"' ?: '"Define TheMovieDB key"'
+        it.buildConfigField "String", "MOVIE_DB_KEY", MOVIE_DB_KEY
+    }
 }
 
 dependencies {
