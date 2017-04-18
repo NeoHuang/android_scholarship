@@ -27,16 +27,23 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
     @Override
     public void onBindViewHolder(MovieHolder holder, int position) {
+
+        if (mMovies == null || position >= mMovies.length) {
+            return;
+        }
         Picasso.with(holder.mThumbnail.getContext())
-                .load("https://image.tmdb.org/t/p/w500/unPB1iyEeTBcKiLg8W083rlViFH.jpg")
-                .placeholder(R.drawable.placeholder )
+                .load(mMovies[position].getPoster())
+                .placeholder(R.drawable.placeholder)
                 .error(R.drawable.placeholder_error)
                 .into(holder.mThumbnail);
     }
 
     @Override
     public int getItemCount() {
-        return 20;
+        if (mMovies == null) {
+            return 0;
+        }
+        return mMovies.length;
     }
 
     public void setMovies(MovieInfo[] movies) {

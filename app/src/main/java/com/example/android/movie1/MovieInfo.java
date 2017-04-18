@@ -8,7 +8,7 @@ public class MovieInfo {
     protected String name;
     protected String releaseDate;
     protected String poster;
-    protected float voteAvg;
+    protected double voteAvg;
     protected String overview;
 
     public String getName() {
@@ -35,11 +35,11 @@ public class MovieInfo {
         this.poster = poster;
     }
 
-    public float getVoteAvg() {
+    public double getVoteAvg() {
         return voteAvg;
     }
 
-    public void setVoteAvg(float voteAvg) {
+    public void setVoteAvg(double voteAvg) {
         this.voteAvg = voteAvg;
     }
 
