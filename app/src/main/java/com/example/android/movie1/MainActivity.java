@@ -1,6 +1,7 @@
 package com.example.android.movie1;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Movie;
 import android.os.AsyncTask;
@@ -19,11 +20,20 @@ import android.widget.Toast;
 
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler{
     private static final String TAG = "Movie1";
     protected RecyclerView mRecyclerView;
     protected MovieAdapter mMovieAdapter;
     private ProgressBar mLoadingIndicator;
+
+    @Override
+    public void onClick(MovieInfo movie) {
+        Class detailClass = DetailActivity.class;
+        Intent detailIntent = new Intent(this, detailClass);
+        detailIntent.putExtra("Movie", movie);
+        startActivity(detailIntent);
+
+    }
 
     enum Sort {
         Pop, TopRated
@@ -36,13 +46,14 @@ public class MainActivity extends AppCompatActivity {
 
         mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
 
-        mMovieAdapter = new MovieAdapter();
+        mMovieAdapter = new MovieAdapter(this);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         mRecyclerView.setAdapter(mMovieAdapter);
         Log.v(TAG, BuildConfig.MOVIE_DB_KEY);
 
+        setTitle(R.string.menu_pop_title);
         new FetchMovieTask().execute(Sort.Pop);
     }
 
@@ -58,9 +69,11 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
         switch (id) {
             case R.id.action_pop:
+                setTitle(R.string.menu_pop_title);
                 new FetchMovieTask().execute(Sort.Pop);
                 return true;
             case R.id.action_rate:
+                setTitle(R.string.menu_rate_title);
                 new FetchMovieTask().execute(Sort.TopRated);
                 return true;
         }

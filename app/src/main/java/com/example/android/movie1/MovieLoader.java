@@ -17,7 +17,6 @@ public class MovieLoader {
     private static String TMD_VOTE_AVG="vote_average";
     private static String TMD_RELEASE_DATE="release_date";
     private static String TMD_POSTER_PATH="poster_path";
-    private static String TMD_IMG_BASE="https://image.tmdb.org/t/p/w500";
 
     public static MovieInfo[] loadPopularMovies() {
         URL popUrl = NetworkUtils.buildPopularMovieUrl();
@@ -45,7 +44,7 @@ public class MovieLoader {
 
                 MovieInfo movieInfo = new MovieInfo();
                 movieInfo.setName(movieJson.getString(TMD_TITLE));
-                movieInfo.setPoster(TMD_IMG_BASE+movieJson.getString(TMD_POSTER_PATH));
+                movieInfo.setPoster(movieJson.getString(TMD_POSTER_PATH));
                 movieInfo.setOverview(movieJson.getString(TMD_OVERVIEW));
                 movieInfo.setVoteAvg(movieJson.getDouble(TMD_VOTE_AVG));
                 movieInfo.setReleaseDate(movieJson.getString(TMD_RELEASE_DATE));

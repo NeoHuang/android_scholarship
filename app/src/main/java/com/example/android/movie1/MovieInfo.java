@@ -1,10 +1,12 @@
 package com.example.android.movie1;
 
+import java.io.Serializable;
+
 /**
  * Created by zhiyihuang on 17/04/2017.
  */
 
-public class MovieInfo {
+public class MovieInfo implements Serializable{
     protected String name;
     protected String releaseDate;
     protected String poster;
