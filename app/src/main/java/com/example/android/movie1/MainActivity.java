@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Movie;
 import android.os.AsyncTask;
+import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,11 +21,16 @@ import android.widget.Toast;
 
 import java.util.zip.Inflater;
 
-public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler{
+import static com.example.android.movie1.MainActivity.Sort.Pop;
+import static com.example.android.movie1.MainActivity.Sort.TopRated;
+
+public class MainActivity extends AppCompatActivity implements MovieAdapter.MovieAdapterOnClickHandler {
     private static final String TAG = "Movie1";
     protected RecyclerView mRecyclerView;
     protected MovieAdapter mMovieAdapter;
     private ProgressBar mLoadingIndicator;
+    private int mCurrentSort;
+    private String STATE_KEY = "CurrentState";
 
     @Override
     public void onClick(MovieInfo movie) {
@@ -53,8 +59,29 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         mRecyclerView.setAdapter(mMovieAdapter);
         Log.v(TAG, BuildConfig.MOVIE_DB_KEY);
 
-        setTitle(R.string.menu_pop_title);
-        new FetchMovieTask().execute(Sort.Pop);
+        sortByPop();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt(STATE_KEY, mCurrentSort);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        mCurrentSort = 0;
+        if (savedInstanceState != null) {
+            mCurrentSort = savedInstanceState.getInt(STATE_KEY);
+        }
+        switch (mCurrentSort) {
+            case 1:
+                sortByTopRated();
+                break;
+            default:
+                sortByPop();
+        }
     }
 
     @Override
@@ -69,16 +96,26 @@ public class MainActivity extends AppCompatActivity implements MovieAdapter.Movi
         int id = item.getItemId();
         switch (id) {
             case R.id.action_pop:
-                setTitle(R.string.menu_pop_title);
-                new FetchMovieTask().execute(Sort.Pop);
+                sortByPop();
                 return true;
             case R.id.action_rate:
-                setTitle(R.string.menu_rate_title);
-                new FetchMovieTask().execute(Sort.TopRated);
+                sortByTopRated();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void sortByPop() {
+        setTitle(R.string.menu_pop_title);
+        mCurrentSort = 0;
+        new FetchMovieTask().execute(Pop);
+    }
+
+    private void sortByTopRated() {
+        setTitle(R.string.menu_rate_title);
+        mCurrentSort = 1;
+        new FetchMovieTask().execute(Sort.TopRated);
     }
 
     public class FetchMovieTask extends AsyncTask<Sort, Void, MovieInfo[]> {
