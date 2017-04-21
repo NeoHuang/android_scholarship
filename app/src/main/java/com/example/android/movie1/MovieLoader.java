@@ -3,7 +3,6 @@ package com.example.android.movie1;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.net.URL;
 
 /**
